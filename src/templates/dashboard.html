@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LabSync - Smart Scheduling for Smarter Science</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='img/labsync.png') }}" alt="LabSync Logo" class="logo-image" onerror="this.style.display='none'">
+                <div class="logo">LabSync</div>
+            </div>
+            <div class="tagline">Smart Scheduling for Smarter Science</div>
+        </div>
+
+
+        <!-- Booking Form -->
+        <div class="card">
+            <h2>
+                🔬 New Booking
+            </h2>
+            
+            <div id="alertContainer"></div>
+
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="userName">Your Name</label>
+                    <input type="text" id="userName" name="userName" class="form-control" required 
+                           placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="resource">Resource</label>
+                    <select id="resource" name="resource" class="form-control" required>
+                        <option value="">Select a resource...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date" class="form-control" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startTime">Start Time</label>
+                        <input type="time" id="startTime" name="startTime" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duration (minutes)</label>
+                        <select id="duration" name="duration" class="form-control" required>
+                            <option value="">Select duration...</option>
+                            <option value="30">30 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                            <option value="180">3 hours</option>
+                            <option value="240">4 hours</option>
+                            <option value="480">8 hours (full day)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="submitButton">
+                    📅 Book Resource
+                </button>
+            </form>
+        </div>
+
+        <!-- Bookings List -->
+        <div class="card">
+            <h2>
+                📋 Current Bookings
+            </h2>
+            
+            <div class="form-row" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label for="filterResource">Filter by Resource</label>
+                    <select id="filterResource" class="form-control">
+                        <option value="">All Resources</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filterDate">Filter by Date</label>
+                    <input type="date" id="filterDate" class="form-control">
+                </div>
+            </div>
+
+            <div class="booking-list" id="bookingsList">
+                <div style="text-align: center; color: #6B7280; padding: 40px;">
+                    Loading bookings...
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalBookings">-</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="todayBookings">-</div>
+                <div class="stat-label">Today's Bookings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="availableResources">-</div>
+                <div class="stat-label">Available Resources</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

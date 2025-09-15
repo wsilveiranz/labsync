@@ -1,0 +1,32 @@
+[
+  {
+    "id": "microscope-a",
+    "name": "Microscope A",
+    "type": "equipment",
+    "status": "available"
+  },
+  {
+    "id": "microscope-b", 
+    "name": "Microscope B",
+    "type": "equipment",
+    "status": "available"
+  },
+  {
+    "id": "cold-room-1",
+    "name": "Cold Room 1", 
+    "type": "room",
+    "status": "available"
+  },
+  {
+    "id": "centrifuge",
+    "name": "Centrifuge",
+    "type": "equipment", 
+    "status": "available"
+  },
+  {
+    "id": "pcr-machine",
+    "name": "PCR Machine",
+    "type": "equipment",
+    "status": "available"
+  }
+]

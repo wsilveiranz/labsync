@@ -1,121 +1,236 @@
-# LabSync - Lab Resource Booking Application
+# LabSync Phase 2 - Backend Implementation
 
-## 🚀 Quick Start
-```bash
-# Option 1: Open directly in browser
-# Double-click src/index.html
+Welcome to LabSync Phase 2! This enhanced version adds a Python Flask backend to the original client-side prototype, providing server-side persistence and multi-user support.
 
-# Option 2: Serve locally
-cd src
-python -m http.server 8080
-# Open http://localhost:8080
+## 🚀 What's New in Phase 2
+
+- **Flask Backend API**: RESTful endpoints for resources and bookings
+- **Server-side Persistence**: JSON file-based storage that persists across deployments
+- **Multi-user Support**: Centralized booking management
+- **Data Migration**: Seamless migration from localStorage to server storage
+- **Enhanced UI**: Auto-refreshing dashboard with real-time updates
+- **Azure Ready**: Configured for deployment to Azure App Service
+
+## 📁 Project Structure
+
+```
+src/
+├── app.py                   # Flask application with API endpoints
+├── requirements.txt         # Python dependencies
+├── startup.txt              # Azure App Service startup command
+├── templates/
+│   └── dashboard.html       # Server-rendered dashboard template
+├── static/
+│   ├── css/
+│   │   └── style.css        # Application styles
+│   ├── js/
+│   │   └── app.js           # Frontend API integration
+│   └── img/
+│       └── labsync.png      # LabSync logo
+├── data/
+│   ├── resources.json       # Available lab resources
+│   └── bookings.json        # Booking data storage
+├── migration/
+│   └── migrate.py           # Data migration utilities
+├── index.html               # Phase 1 client-side version (reference)
+└── README.md                # This file
 ```
 
-## ✅ Completed Features
+## 🛠️ Development Setup
 
-### 1. HTML Structure ✅
-- Complete booking form with all required fields
-- Resource dropdown with 5 lab resources
-- Date and time inputs with proper validation
-- Booking list display with filtering options
-- Statistics dashboard
+### Prerequisites
+- Python 3.8+
+- pip (Python package installer)
 
-### 2. CSS Styling ✅
-- **Brand Colors Applied:**
-  - Primary: Crimson Red #B91C1C (buttons, headers)
-  - Secondary: Warm Coral #F87171 (hover states)  
-  - Accent: Golden Amber #F59E0B (highlights)
-  - Background: Off-White #F9FAFB
-  - Text: Charcoal #111827
-- Minimalist design with rounded corners
-- Responsive grid layout
-- Clean typography and spacing
+### Local Development
 
-### 3. Core JavaScript Functions ✅
+1. **Navigate to src directory**
+   ```powershell
+   cd src
+   ```
+
+2. **Install Dependencies**
+   ```powershell
+   pip install -r requirements.txt
+   ```
+
+3. **Set Environment Variables**
+   ```powershell
+   $env:FLASK_APP="app.py"
+   $env:FLASK_ENV="development"
+   ```
+
+4. **Run the Application**
+   ```powershell
+   flask run
+   ```
+   
+   Or use the production server:
+   ```powershell
+   python app.py
+   ```
+
+5. **Access the Application**
+   - Open your browser to: http://127.0.0.1:5000
+   - The app will automatically create data files on first run
+
+## 🌐 API Endpoints
+
+### Resources
+- `GET /api/resources` - List all lab resources
+- `GET /api/availability/{resource_id}?date=YYYY-MM-DD` - Check resource availability
+
+### Bookings
+- `GET /api/bookings` - List all bookings (supports filtering)
+- `POST /api/bookings` - Create a new booking
+- `DELETE /api/bookings/{id}` - Delete a booking
+
+### Migration
+- `POST /api/migrate` - Migrate localStorage data to server
+
+### Statistics
+- `GET /api/stats` - Get booking statistics
+
+### Example API Usage
+
+**Create a Booking:**
 ```javascript
-✅ checkConflict(resource, date, startTime, duration) → boolean
-✅ saveBooking(bookingData) → {success: boolean, message: string}
-✅ getBookings(filterBy) → array of bookings  
-✅ deleteBooking(id) → boolean
+fetch('/api/bookings', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    user: 'John Doe',
+    resource_id: 'microscope-a',
+    start_time: '2025-09-15T09:00',
+    duration: 120
+  })
+})
 ```
 
-### 4. Conflict Detection Logic ✅
-- Time interval overlap algorithm implemented
-- Prevents double-bookings for same resource
-- Formula: `max(start1, start2) < min(end1, end2)`
-- Real-time validation during booking creation
+**Get Today's Bookings:**
+```javascript
+const today = new Date().toISOString().split('T')[0];
+fetch(`/api/bookings?date=${today}`)
+```
 
-### 5. Form Validation ✅
-- **Required field validation** - all fields must be filled
-- **Past date prevention** - cannot book resources for past dates
-- **Time format validation** - proper time handling
-- **User feedback** - success/error alerts with auto-hide
-- **Input sanitization** - trim whitespace, validate data types
+## 🔄 Data Migration
 
-### 6. Booking Management Features ✅
-- **View all bookings** in sorted list (by date/time)
-- **Delete bookings** with confirmation dialog
-- **Filter by resource** dropdown
-- **Filter by date** picker
-- **Real-time statistics** showing total bookings, today's bookings, available resources
-- **Immediate UI updates** after any action
+If you were using the Phase 1 (client-side) version, you can migrate your existing bookings:
 
-## 🧪 Testing the Application
+1. Open the new backend version in your browser
+2. Click the "Migrate localStorage Data" button
+3. Your existing bookings will be transferred to the server
+4. localStorage data will be automatically cleared after successful migration
 
-### Basic Workflow Test
-1. **Fill out booking form:**
-   - Enter your name
-   - Select a resource (e.g., "Microscope A")
-   - Choose today's date
-   - Set start time (e.g., "09:00")
-   - Select duration (e.g., "2 hours")
+## 🚀 Azure Deployment
 
-2. **Submit booking** - should see success message
+### Quick Deploy Steps
 
-3. **Verify booking appears** in the list below
+1. **Create Azure App Service**
+   - Runtime: Python 3.x (Linux)
+   - Plan: Basic or Free tier for development
 
-4. **Test conflict detection:**
-   - Try booking same resource at overlapping time
-   - Should see error message preventing double-booking
+2. **Configure App Settings**
+   - `WEBSITES_PORT`: 8000 (if needed)
+   - `DATA_DIR`: /home/data (for persistent storage)
 
-5. **Test filtering:**
-   - Use resource/date filters to narrow down bookings
-   - Verify only matching bookings show
+3. **Deploy the src directory**
 
-6. **Test deletion:**
-   - Click delete button on any booking
-   - Confirm deletion in dialog
-   - Verify booking disappears from list
+   **Option A - GitHub Integration:**
+   - Connect your GitHub repository
+   - Set the App startup file to: `src/startup.txt`
+   - Enable automatic deployments
 
-### Edge Cases to Test
-- [ ] Booking in the past (should be rejected)
-- [ ] Empty form submission (should show validation errors)
-- [ ] Overlapping time slots (should prevent conflicts)
-- [ ] Browser refresh (data should persist)
-- [ ] Filter combinations (resource + date)
+   **Option B - ZIP Deploy:**
+   - Create a ZIP file of the src directory contents
+   - Use Azure Portal → Deployment Center → ZIP Deploy
 
-## 📊 Data Storage
-- **Storage:** Browser localStorage
-- **Key:** `labsync_bookings`
-- **Format:** JSON array of booking objects
-- **Persistence:** Survives browser refresh/restart
+4. **Startup Command**
+   ```
+   gunicorn app:app --bind=0.0.0.0:8000
+   ```
 
-## 🎯 Validation Criteria Met
-- [x] **Conflict Prevention:** Zero double-bookings possible ✅
-- [x] **Data Persistence:** Bookings survive browser refresh ✅  
-- [x] **Form Validation:** Invalid inputs rejected ✅
-- [x] **Immediate Feedback:** Booking appears in list instantly ✅
-- [x] **Speed Test:** Complete booking flow in under 10 clicks ✅
-- [x] **Usability:** Any user can book without instructions ✅
+### Environment Variables
 
-## 🚀 Next Steps (Future Enhancements)
-- Add Flask backend for multi-user support
-- Deploy to Azure App Service
-- Implement user authentication
-- Add calendar view with drag-and-drop
-- Email notifications for bookings
-- Usage analytics dashboard
+For production deployment, consider setting:
+- `DATA_DIR`: Path for data storage (default: ./data)
+- `FLASK_ENV`: production
+- `PORT`: 8000 (for Azure App Service)
 
-## 🏗️ Architecture
-- **Phase 1:** Client-side prototype (CURRENT)
-- **Phase 2:** Backend enhancement with Flask + Azure (FUTURE)
+## 📊 Features
+
+### Enhanced Booking System
+- **Real-time Conflict Detection**: Server-side validation prevents double bookings
+- **Persistent Storage**: Bookings survive server restarts and deployments
+- **Multi-user Safe**: Centralized storage prevents data conflicts
+
+### Improved User Experience
+- **Auto-refresh**: Dashboard updates every 30 seconds
+- **Live Statistics**: Real-time resource availability
+- **Better Error Handling**: Detailed error messages and retry logic
+
+### Migration Support
+- **Backward Compatibility**: Seamless upgrade from Phase 1
+- **Data Validation**: Migration process validates and reports issues
+- **Conflict Resolution**: Handles overlapping bookings during migration
+
+## 🔧 Technical Details
+
+### Data Storage
+- **Format**: JSON files for simplicity and portability
+- **Location**: `/data` directory (configurable via DATA_DIR)
+- **Persistence**: Files stored in Azure `/home` directory survive deployments
+
+### Security Considerations
+- **Input Validation**: All API inputs are validated
+- **Error Handling**: Graceful error responses without exposing internals
+- **CORS**: Currently open for development (configure for production)
+
+### Performance
+- **File-based Storage**: Simple and fast for prototype scale
+- **In-memory Caching**: No database overhead
+- **Client-side Optimization**: Auto-refresh prevents unnecessary requests
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Flask Import Error:**
+```
+pip install flask gunicorn
+```
+
+**Data Files Not Found:**
+- The app automatically creates data files on first run
+- Check file permissions in the data directory
+
+**Azure Deployment Issues:**
+- Verify startup command: `gunicorn app:app --bind=0.0.0.0:8000`
+- Check application logs in Azure Portal
+- Ensure requirements.txt includes all dependencies
+
+**Migration Issues:**
+- Ensure localStorage contains valid JSON data
+- Check browser console for error messages
+- Verify localStorage key is 'labsync_bookings'
+
+## � Future Enhancements
+
+Ready for Phase 3? Consider these improvements:
+- Database integration (PostgreSQL, MongoDB)
+- User authentication and authorization
+- Real-time notifications via WebSockets
+- Calendar view with drag-and-drop
+- Mobile app development
+- Advanced analytics and reporting
+
+## 🤝 Contributing
+
+1. Follow the existing code style and structure
+2. Test locally before deploying
+3. Update documentation for new features
+4. Ensure backward compatibility when possible
+
+---
+
+**LabSync Phase 2** - Taking lab resource management to the next level! 🧪⚡
